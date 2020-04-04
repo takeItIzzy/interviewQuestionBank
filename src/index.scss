@@ -1,0 +1,118 @@
+@import "~normalize.css";
+@import "~@blueprintjs/core/lib/css/blueprint.css";
+@import "~@blueprintjs/icons/lib/css/blueprint-icons.css";
+@import "~@blueprintjs/core/lib/scss/variables";
+
+@font-face {
+	font-family: "OPPO Sans";
+	src: url("./font/OPPOSans-B.ttf");
+}
+@font-face {
+	font-family: "OPPO Sans";
+	src: url("./font/OPPOSans-H.ttf");
+}
+@font-face {
+	font-family: "OPPO Sans";
+	src: url("./font/OPPOSans-L.ttf");
+}
+@font-face {
+	font-family: "OPPO Sans";
+	src: url("./font/OPPOSans-M.ttf");
+}
+@font-face {
+	font-family: "OPPO Sans";
+	src: url("./font/OPPOSans-R.ttf");
+}
+
+* {
+	margin: 0;
+	padding: 0;
+}
+body {
+	font-family: "OPPO Sans";
+}
+ul,
+li {
+	list-style: none;
+}
+.editorBox {
+	display: flex;
+	flex-direction: row;
+	height: 100vh;
+	overflow: hidden;
+	.sideBar {
+		flex: 1;
+		min-width: 270px;
+		background-color: #e1e8ed;
+		display: flex;
+		flex-direction: column;
+		.tree {
+			flex: 19;
+			overflow-y: auto;
+			.treeLi {
+				line-height: 50px;
+			}
+			.treeLine {
+				&:hover {
+					cursor: pointer;
+					background-color: #ced9e0;
+				}
+			}
+			.treeLineActive {
+				background-color: #fff;
+				&:hover {
+					cursor: pointer;
+					background-color: #ced9e0;
+				}
+			}
+		}
+	}
+	.noteList {
+		flex: 1;
+		min-width: 230px;
+		background-color: #ebf1f5;
+		border-left: 1px solid rgb(235, 235, 235);
+		border-right: 1px solid rgb(235, 235, 235);
+		overflow-y: auto;
+		.item {
+			cursor: pointer;
+			border-bottom: 1px solid #ddd;
+			padding: 15px 10px;
+			line-height: 1.5;
+			word-wrap: break-word;
+			&:hover {
+				background-color: #dee5ec;
+			}
+		}
+	}
+	.notePage {
+		flex: 6;
+		background-color: #f5f8fa;
+		display: flex;
+		flex-direction: column;
+		.contentBox {
+			flex: 49;
+			padding: 20px 28px;
+			overflow-x: hidden;
+			overflow-y: auto;
+			img {
+				max-width: 100%;
+			}
+			.selected {
+				padding: 0 5px;
+			}
+		}
+	}
+
+	.toolBar {
+		flex: 1;
+		min-height: 40px;
+		background-color: rgb(231, 235, 238);
+		display: flex;
+		flex-direction: row;
+		align-items: center;
+		justify-content: space-between;
+		padding-left: 10px;
+		padding-right: 10px;
+	}
+}
