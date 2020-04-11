@@ -49,22 +49,23 @@ li {
 		.tree {
 			flex: 19;
 			overflow-y: auto;
-			.treeLi {
-				line-height: 50px;
-			}
 			.treeLine {
+				padding: 15px 0;
 				&:hover {
 					cursor: pointer;
 					background-color: #ced9e0;
 				}
 			}
 			.treeLineActive {
-				background-color: #fff;
+				padding: 15px 0;
+				background-color: #ced9e0;
 				&:hover {
 					cursor: pointer;
-					background-color: #ced9e0;
 				}
 			}
+		}
+		.rightMenu {
+			width: 0px;
 		}
 	}
 	.noteList {
