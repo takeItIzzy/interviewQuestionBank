@@ -1,4 +1,4 @@
-import { observable, action } from "mobx";
+import { observable, action, trace, set, get, autorun } from "mobx";
 import axios from "axios";
 import { Backend } from "../func&var/Variables";
 
@@ -108,11 +108,25 @@ class AppState {
 				this.current_tree = JSON.parse(res.data.tree.currentTree);
 			})
 			.catch((err) => {
-				console.error(err.toString());
+				console.error(JSON.parse(err));
 			});
 	}
 	@action changeTree(tree) {
-		this.current_tree = JSON.parse(tree)
+		//树节点每次增删改之后后端返回最新树，改变当前树
+		this.current_tree = tree;
+	}
+
+	@action async queryNoteList(node) {
+		await axios.post(`${Backend}/nodeList`, {
+			user: this.username,
+			node
+		}).then((res)=>{
+			if (res.data.isError) {
+				throw res.data.error
+			}
+		}).catch((err)=>{
+			console.error(JSON.parse(err))
+		})
 	}
 }
 

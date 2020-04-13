@@ -42,7 +42,7 @@ class SideBar extends Component {
 				if (res.data.isError) {
 					throw res.data.error;
 				}
-				this.props.store.changeTree(res.data.tree.currentTree);
+				this.props.store.changeTree(JSON.parse(res.data.tree.currentTree));
 			})
 			.catch((err) => {
 				console.error(err.toString());
@@ -58,10 +58,9 @@ class SideBar extends Component {
 			<div className="sideBar">
 				<div className="tree">
 					<ul>
-						// TODO 对节点进行修改会触发 sideBar 的 rerender，但是视图不更新，不知道原因，可能是因为这里 map 返回了新数组而不是直接操作 mobx 全局属性？明天再看吧
-						{this.props.store.current_tree.map((item) => {
+						{this.props.store.current_tree.slice().map((item) => {
 							return (
-								<li key={item.cusid} className="treeLi">
+								<li key={item._id} className="treeLi">
 									<TreeNode {...item} />
 								</li>
 							);

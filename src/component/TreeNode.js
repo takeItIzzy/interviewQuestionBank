@@ -13,7 +13,6 @@ import {
 	InputGroup,
 } from "@blueprintjs/core";
 import { ContextMenuTarget } from "@blueprintjs/core/lib/esnext/components";
-import { FLEX_EXPANDER } from "@blueprintjs/core/lib/esm/common/classes";
 
 import { Backend } from "../func&var/Variables";
 
@@ -23,16 +22,15 @@ import { Backend } from "../func&var/Variables";
 @ContextMenuTarget
 class TreeNode extends Component {
 	state = {
-		cusid: this.props.cusid,
+		//! 这里遇到个大坑，切记！
+		//! 一开始把 render() 递归时传进来的 store 都赋给了 state，这是错误的，会导致 mobx 监听不到属性变化，这是我刚学习 mobx 时犯下的错误
+		//! 虽然这个错误示范我学了 mobx 一阵子就知道了，但是 render() 时使用 this.state.child.map 这里好久都没注意到，导致排查 bug 花了很久
+		//! 后来调整的时候把大部分的 state 都删掉了，但是重命名时需要在输入框中进行 name 的双向绑定，所以保留了 name 的赋值
 		name: this.props.name,
 		copyName: this.props.name, //标签名备份，用于取消重命名时恢复原值
-		level: this.props.level,
-		child: this.props.child,
-		parentId: this.props.parentId,
-		type: this.props.type,
 		isShow: true,
 		isFile: true,
-		newNodeName: "",
+		newNodeName: "", //右键菜单中输入框
 	};
 
 	leftClickTreeLine() {
@@ -45,10 +43,12 @@ class TreeNode extends Component {
 			isShow: !this.state.isShow,
 		}));
 
-		//给被点击节点添加背景色
-		if (this.state.type === "file") {
-			this.props.store.treeClickId = this.state.cusid;
+		//对类型为小组的节点进行相关操作
+		if (this.props.type === "file") {
+			this.props.store.treeClickId = this.props.cusid; //改变节点点击背景色
+
 			//传递被点击节点的小组列表
+			//TODO
 		}
 	}
 
@@ -71,7 +71,10 @@ class TreeNode extends Component {
 				if (res.isError) {
 					throw res.data.error;
 				}
-				this.props.store.changeTree(res.data.tree.currentTree);
+				this.props.store.changeTree(
+					JSON.parse(res.data.tree.currentTree)
+				);
+				this.state.newNodeName = ""; // 每次新建节点后要把节点名置空
 			})
 			.catch((err) => {
 				console.error(err);
@@ -91,7 +94,9 @@ class TreeNode extends Component {
 				if (res.data.isError) {
 					throw res.data.error;
 				}
-				this.props.store.changeTree(res.data.tree.currentTree);
+				this.props.store.changeTree(
+					JSON.parse(res.data.tree.currentTree)
+				);
 			})
 			.catch((err) => {
 				console.error(err);
@@ -105,7 +110,9 @@ class TreeNode extends Component {
 
 	//取消重命名
 	cancelRename() {
-		this.state.name = this.state.copyName;
+		this.setState({
+			name: this.state.copyName,
+		});
 		this.props.store.treeRenameId = "";
 	}
 
@@ -114,7 +121,7 @@ class TreeNode extends Component {
 		await axios
 			.post(`${Backend}/treenode/saverename`, {
 				user: this.props.store.username,
-				cusid: this.state.cusid,
+				cusid: this.props.cusid,
 				name: this.state.name,
 			})
 			.then((res) => {
@@ -122,7 +129,12 @@ class TreeNode extends Component {
 					throw res.data.error;
 				}
 				this.props.store.treeRenameId = "";
-				this.props.store.changeTree(res.data.tree.currentTree);
+				this.props.store.changeTree(
+					JSON.parse(res.data.tree.currentTree)
+				);
+				this.setState({
+					copyName: this.state.name,
+				});
 			})
 			.catch((error) => {
 				console.error(JSON.parse(error));
@@ -181,25 +193,24 @@ class TreeNode extends Component {
 			<div>
 				<div
 					className={
-						(this.props.store.treeClickId === this.state.cusid) &
-						(this.state.type === "file")
+						this.props.store.treeClickId === this.props.cusid &&
+						this.props.type === "file"
 							? "treeLineActive"
 							: "treeLine"
 					}
 					style={{
-						paddingLeft: this.state.level * 15 + "px",
+						paddingLeft: this.props.level * 15 + "px",
 						display: "flex",
 						alignItems: "center",
 					}}
 					onClick={() => this.leftClickTreeLine()}
-					custype={this.state.type}
-					cusid={this.state.cusid}
-					cuslevel={this.state.level}
-					cuschild={JSON.stringify(this.state.child)}
+					custype={this.props.type}
+					cusid={this.props.cusid}
+					cuslevel={this.props.level}
 				>
 					<Icon
 						icon={
-							this.state.type === "folder"
+							this.props.type === "folder"
 								? this.state.isShow
 									? "chevron-down"
 									: "chevron-right"
@@ -209,7 +220,7 @@ class TreeNode extends Component {
 						color={Colors.GRAY2}
 						style={{ marginRight: 10 + "px" }}
 					></Icon>
-					{this.props.store.treeRenameId === this.state.cusid ? (
+					{this.props.store.treeRenameId === this.props.cusid ? (
 						<ControlGroup fill vertical={false}>
 							<InputGroup
 								value={this.state.name}
@@ -236,15 +247,12 @@ class TreeNode extends Component {
 						overflow: "hidden",
 					}}
 				>
-					{this.state.type === "folder" &&
-						this.state.child &&
-						this.state.child.map((i, k) => {
+					{this.props.type === "folder" &&
+						this.props.child &&
+						this.props.child.slice().map((i, k) => {
 							return (
-								<li key={i.cusid}>
-									<TreeNode
-										{...i}
-										store={this.props.store}
-									/>
+								<li key={i._id}>
+									<TreeNode {...i} store={this.props.store} />
 								</li>
 							);
 						})}
