@@ -6,8 +6,6 @@ import {
 	Icon,
 	Colors,
 	Menu,
-	MenuItem,
-	MenuDivider,
 	ControlGroup,
 	Button,
 	InputGroup,
@@ -48,7 +46,7 @@ class TreeNode extends Component {
 			this.props.store.treeClickId = this.props.cusid; //改变节点点击背景色
 
 			//传递被点击节点的小组列表
-			//TODO
+			this.props.store.queryNoteList(this.props.cusid);
 		}
 	}
 

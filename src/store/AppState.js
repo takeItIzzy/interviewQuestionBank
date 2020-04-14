@@ -94,7 +94,7 @@ class AppState {
 再来个普通文本
 `;
 	@observable isEditing = false; //文章是否正在编辑
-	@observable treeClickId = ""; //树节点点击变色，其它节点恢复颜色
+	@observable treeClickId = ""; //当前点击的树节点
 	@observable treeRenameId = ""; //树节点是否正在重命名
 	@observable createNode = ""; //树节点右键菜单点击新建显示分区名或者小组名
 	@action async queryTree() {
@@ -116,17 +116,26 @@ class AppState {
 		this.current_tree = tree;
 	}
 
+	@action changeNoteList(noteList) {
+		//笔记列表每次增删改查返回最新列表，改变当前列表
+		this.current_note_list = noteList;
+	}
+
 	@action async queryNoteList(node) {
-		await axios.post(`${Backend}/nodeList`, {
-			user: this.username,
-			node
-		}).then((res)=>{
-			if (res.data.isError) {
-				throw res.data.error
-			}
-		}).catch((err)=>{
-			console.error(JSON.parse(err))
-		})
+		await axios
+			.post(`${Backend}/noteList`, {
+				user: this.username,
+				node,
+			})
+			.then((res) => {
+				if (res.data.isError) {
+					throw res.data.error;
+				}
+				this.current_note_list = JSON.parse(res.data.noteList);
+			})
+			.catch((err) => {
+				console.error(err.toString());
+			});
 	}
 }
 

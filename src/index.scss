@@ -64,9 +64,6 @@ li {
 				}
 			}
 		}
-		.rightMenu {
-			width: 0px;
-		}
 	}
 	.noteList {
 		flex: 1;
@@ -74,15 +71,35 @@ li {
 		background-color: #ebf1f5;
 		border-left: 1px solid rgb(235, 235, 235);
 		border-right: 1px solid rgb(235, 235, 235);
-		overflow-y: auto;
-		.item {
-			cursor: pointer;
-			border-bottom: 1px solid #ddd;
-			padding: 15px 10px;
-			line-height: 1.5;
-			word-wrap: break-word;
-			&:hover {
-				background-color: #dee5ec;
+		display: flex;
+		flex-direction: column;
+		.noNote {
+			display: none;
+		}
+		.noNoteActive {
+			flex: 19;
+			display: flex;
+			flex-direction: column;
+			justify-content: center;
+			align-items: center;
+			p {
+				color: #ccc;
+				font-size: 18px;
+				margin: 10px 0;
+			}
+		}
+		.noteListActive {
+			flex: 19;
+			overflow-y: auto;
+			.item {
+				cursor: pointer;
+				border-bottom: 1px solid #ddd;
+				padding: 15px 10px;
+				line-height: 1.5;
+				word-wrap: break-word;
+				&:hover {
+					background-color: #dee5ec;
+				}
 			}
 		}
 	}
@@ -112,8 +129,17 @@ li {
 		display: flex;
 		flex-direction: row;
 		align-items: center;
-		justify-content: space-between;
 		padding-left: 10px;
 		padding-right: 10px;
+	}
+	.toolBarAdd {
+		justify-content: center;
+	}
+	.toolBarArticle {
+		justify-content: space-between;
+	}
+
+	.rightMenu {
+		width: 0px;
 	}
 }

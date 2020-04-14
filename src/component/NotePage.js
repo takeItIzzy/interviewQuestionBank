@@ -16,7 +16,7 @@ class NotePage extends Component {
 	render() {
 		return (
 			<div className="notePage">
-				<div className="toolBar">
+				<div className="toolBar toolBarArticle">
 					{this.props.store.isEditing ? (
 						<div>
 							<Button
