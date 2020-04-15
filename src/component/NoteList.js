@@ -19,7 +19,7 @@ class NoteList extends Component {
 				<div className={this.props.store.current_note_list.length === 0 ? "noNote" : "noteListActive"} >
 					{this.props.store.current_note_list.slice().map((item) => {
 						return (
-							<NodeListItem itemName={item.title} key={item._id} />
+							<NodeListItem {...item} key={item._id} />
 						);
 					})}
 				</div>

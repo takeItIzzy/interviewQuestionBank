@@ -7,95 +7,11 @@ class AppState {
 	@observable username = "zyx";
 	@observable current_tree = []; //笔记树
 	@observable current_note_list = [];
-	@observable current_markdown = `# 说点啥呢
-
-	## 我也不知道啊
-
-	>随便整两句儿
-	
-	再来个普通文本
-	
-## 我也不知道啊
-
->随便整两句儿
-
-再来个普通文本
-
-## 我也不知道啊
-
->随便整两句儿
-
-再来个普通文本
-
-## 我也不知道啊
-
->随便整两句儿
-
-再来个普通文本
-
-## 我也不知道啊
-
->随便整两句儿
-
-再来个普通文本
-
-## 我也不知道啊
-
->随便整两句儿
-
-再来个普通文本
-
-## 我也不知道啊
-
->随便整两句儿
-
-再来个普通文本
-
-## 我也不知道啊
-
->随便整两句儿
-
-再来个普通文本
-
-## 我也不知道啊
-
->随便整两句儿
-
-再来个普通文本
-
-## 我也不知道啊
-
->随便整两句儿
-
-再来个普通文本
-
-## 我也不知道啊
-
->随便整两句儿
-
-再来个普通文本
-
-## 我也不知道啊
-
->随便整两句儿
-
-再来个普通文本
-
-## 我也不知道啊
-
->随便整两句儿
-
-再来个普通文本
-
-## 我也不知道啊
-
->随便整两句儿
-
-再来个普通文本
-`;
+	@observable current_markdown = ""; //当前显示的笔记内容
 	@observable isEditing = false; //文章是否正在编辑
 	@observable treeClickId = ""; //当前点击的树节点
 	@observable treeRenameId = ""; //树节点是否正在重命名
+	@observable noteRenameId = ""; //笔记列表是否正在重命名
 	@observable createNode = ""; //树节点右键菜单点击新建显示分区名或者小组名
 	@action async queryTree() {
 		//向数据库查询当前用户的笔记树

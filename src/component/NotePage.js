@@ -11,9 +11,10 @@ import "react-mde/lib/styles/css/react-mde-all.css";
 @observer
 class NotePage extends Component {
 	state = {
-		selectedTab: "write"
+		selectedTab: "write",
 	};
 	render() {
+		//TODO 明天开始实现笔记功能，notelist 呈现具体面试题目，notepage 展示题目和答案，监听左右键切换 note list 条目
 		return (
 			<div className="notePage">
 				<div className="toolBar toolBarArticle">
