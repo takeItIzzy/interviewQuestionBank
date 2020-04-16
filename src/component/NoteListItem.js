@@ -24,6 +24,13 @@ class NoteListItem extends Component {
 		copyTitle: this.props.title, //复制标题，用来取消重命名
 	};
 
+	leftClick() {
+		this.props.store.noteClickId = this.props._id;
+		this.props.store.noteClickTitle = this.props.title;
+
+		this.props.store.queryMD(this.props._id);
+	}
+
 	renameNote() {
 		this.props.store.noteRenameId = this.props._id;
 	}
@@ -42,9 +49,7 @@ class NoteListItem extends Component {
 				}
 				this.props.store.noteRenameId = "";
 				this.props.store.changeNoteList(JSON.parse(res.data.noteList));
-				this.setState({
-					copyTitle: this.state.title,
-				});
+				this.props.store.noteClickTitle = this.state.title
 			})
 			.catch((error) => {
 				console.error(error);
@@ -97,7 +102,14 @@ class NoteListItem extends Component {
 	}
 	render() {
 		return (
-			<div className="item">
+			<div
+				className={
+					this.props.store.noteClickId === this.props._id
+						? "itemActive"
+						: "item"
+				}
+				onClick={() => this.leftClick()}
+			>
 				{this.props.store.noteRenameId === this.props._id ? (
 					<ControlGroup fill vertical={false}>
 						<InputGroup

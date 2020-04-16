@@ -101,6 +101,14 @@ li {
 					background-color: #dee5ec;
 				}
 			}
+			.itemActive {
+				cursor: pointer;
+				border-bottom: 1px solid #ddd;
+				padding: 15px 10px;
+				line-height: 1.5;
+				word-wrap: break-word;
+				background-color: #dee5ec;
+			}
 		}
 	}
 	.notePage {

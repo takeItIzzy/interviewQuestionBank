@@ -14,7 +14,7 @@ class NotePage extends Component {
 		selectedTab: "write",
 	};
 	render() {
-		//TODO 明天开始实现笔记功能，notelist 呈现具体面试题目，notepage 展示题目和答案，监听左右键切换 note list 条目
+		//TODO 明天写保存笔记和左右翻页功能
 		return (
 			<div className="notePage">
 				<div className="toolBar toolBarArticle">
@@ -45,8 +45,15 @@ class NotePage extends Component {
 					)}
 					<Button icon="cross" minimal={true} />
 				</div>
+				<h1 style={{ padding: "20px", margin: "0 auto" }}>
+					{this.props.store.noteClickTitle}
+				</h1>
 				<div className="contentBox">
-					{this.props.store.isEditing ? (
+					{this.props.store.noteClickId !== "" &&
+					this.props.store.current_markdown === "" &&
+					!this.props.store.isEditing ? (
+						<h2 style={{ color: "#cccccc" }}>当前题目还没有答案</h2>
+					) : this.props.store.isEditing ? (
 						<ReactMde
 							selectedTab={this.state.selectedTab}
 							onTabChange={(tab) =>
