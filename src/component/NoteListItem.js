@@ -49,7 +49,10 @@ class NoteListItem extends Component {
 				}
 				this.props.store.noteRenameId = "";
 				this.props.store.changeNoteList(JSON.parse(res.data.noteList));
-				this.props.store.noteClickTitle = this.state.title
+				this.props.store.noteClickTitle = this.state.title;
+				this.setState({
+					copyTitle: this.state.title,
+				});
 			})
 			.catch((error) => {
 				console.error(error);
