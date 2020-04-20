@@ -150,11 +150,30 @@ li {
 	.rightMenu {
 		width: 0px;
 	}
+}
 
-	.show {
-		display: block;
+.loginBox {
+	display: flex;
+	flex-direction: row;
+	height: 100vh;
+	overflow: hidden;
+	justify-content: center;
+	align-items: center;
+	.login {
+		display: flex;
+		flex-direction: column;
+		width: 65%;
+		max-width: 400px;
 	}
-	.hide {
-		display: none;
-	}
+}
+
+.show {
+	display: block;
+}
+.hide {
+	display: none;
+}
+
+.bp3-text-muted {
+	color:#e44040 !important;
 }
