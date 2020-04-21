@@ -12,15 +12,15 @@ import cusLocalStorage from "../store/cusLocalStorage";
 @observer
 export default class Login extends Component {
 	state = {
-		showPassword: false,
-		showConfirmPassword: false,
-		username: "",
-		password: "",
-		confirmPassword: "",
-		isNameUsed: false,
-		isNameRight: true,
-		isPasswordRight: true,
-		isPasswordConfirmed: true,
+		showPassword: false, //密码输入框显示**还是密码
+		showConfirmPassword: false, //确认密码输入框显示**还是密码
+		username: "", //用户名输入框输入值
+		password: "", //密码输入框输入值
+		confirmPassword: "", //密码确认输入框输入值
+		isNameUsed: false, //用户名是否被占用，用来做输入框错误提示
+		isNameRight: true, //用户名格式是否正确，用来做输入框错误提示
+		isPasswordRight: true, //密码格式是否正确，用来做输入框错误提示
+		isPasswordConfirmed: true, //密码和确认密码是否一致，用来做输入框错误提示
 	};
 
 	async username() {
@@ -55,6 +55,7 @@ export default class Login extends Component {
 	}
 
 	async password(e) {
+		//密码输入框 onChange 事件，验证格式是否正确
 		await this.setState({ password: e.target.value });
 		if (
 			this.state.password.match(
@@ -74,6 +75,7 @@ export default class Login extends Component {
 	}
 
 	async confirm(e) {
+		//确认密码输入框 onChange 事件，验证两次密码是否一致
 		await this.setState({ confirmPassword: e.target.value });
 		this.state.password === this.state.confirmPassword
 			? await this.setState({ isPasswordConfirmed: true })
@@ -81,6 +83,7 @@ export default class Login extends Component {
 	}
 
 	login(path) {
+		//登录和注册按钮提交事件
 		if (path === "/login") {
 			axios
 				.post(`${Backend}/login`, {

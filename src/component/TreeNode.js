@@ -47,6 +47,9 @@ class TreeNode extends Component {
 
 			//传递被点击节点的小组列表
 			this.props.store.queryNoteList(this.props.cusid);
+
+			//移动端切换展示页面
+			this.props.store.viewType < 3 && (this.props.store.viewType += 1);
 		}
 	}
 

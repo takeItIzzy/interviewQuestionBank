@@ -35,6 +35,38 @@ ul,
 li {
 	list-style: none;
 }
+
+// ====== media query =============
+
+.navBar {
+	display: none;
+}
+
+@media screen and (max-width: 800px) {
+	.navBar {
+		height: 40px;
+		line-height: 40px;
+		display: flex !important;
+		justify-content: center;
+		align-items: center;
+		position: fixed;
+		width: 100%;
+		background-color: rgb(41, 87, 131);
+		color: #e9e9e9;
+		font-size: 16px;
+		> button {
+			position: absolute;
+			left: 10px;
+		}
+	}
+
+	.editorBox {
+		padding-top: 40px;
+	}
+}
+
+// ====== media query =============
+
 .editorBox {
 	display: flex;
 	flex-direction: row;
@@ -175,5 +207,5 @@ li {
 }
 
 .bp3-text-muted {
-	color:#e44040 !important;
+	color: #e44040 !important;
 }

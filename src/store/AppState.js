@@ -7,10 +7,11 @@ import cusLocalStorage from "./cusLocalStorage";
 
 class AppState {
 	@observable appname = "面试题库";
+	@observable viewType = 0; //0 说明笔记树、笔记列表、文章全部显示
 	@observable username = cusLocalStorage.get("username");
 	@observable token = cusLocalStorage.get("token");
 	@observable current_tree = []; //笔记树
-	@observable current_note_list = [];
+	@observable current_note_list = []; //笔记列表
 	@observable current_markdown = ""; //当前显示的笔记内容
 	@observable isEditing = false; //文章是否正在编辑
 	@observable treeClickId = ""; //当前点击的树节点
@@ -44,6 +45,7 @@ class AppState {
 	}
 
 	@action async queryNoteList(node) {
+		//查询当前树节点笔记列表
 		await new axiosWithToken(this.token)
 			.post(`${Backend}/noteList`, {
 				user: this.username,
@@ -61,6 +63,7 @@ class AppState {
 	}
 
 	@action async queryMD(id) {
+		//查询当前笔记的 markdown
 		await new axiosWithToken(this.token)
 			.post(`${Backend}/notepage`, {
 				user: this.username,
