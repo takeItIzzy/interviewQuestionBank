@@ -2,11 +2,13 @@ import { observable, action, trace, set, get, autorun } from "mobx";
 import axios from "axios";
 import { Backend } from "../func&var/Variables";
 
-import axiosWithToken from './axiosWithToken';
+import axiosWithToken from "../axiosWithToken";
+import cusLocalStorage from "./cusLocalStorage";
 
 class AppState {
 	@observable appname = "面试题库";
-	@observable username = "zyx";
+	@observable username = cusLocalStorage.get("username");
+	@observable token = cusLocalStorage.get("token");
 	@observable current_tree = []; //笔记树
 	@observable current_note_list = [];
 	@observable current_markdown = ""; //当前显示的笔记内容
@@ -19,11 +21,11 @@ class AppState {
 	@observable createNode = ""; //树节点右键菜单点击新建显示分区名或者小组名
 	@action async queryTree() {
 		//向数据库查询当前用户的笔记树
-		await axiosWithToken
+		await new axiosWithToken(this.token)
 			.post(`${Backend}/nodeTree`, { user: this.username })
 			.then((res) => {
 				if (res.data.isError) {
-					throw {...res.data};
+					throw { ...res.data };
 				}
 				this.current_tree = JSON.parse(res.data.tree.currentTree);
 			})
@@ -42,7 +44,7 @@ class AppState {
 	}
 
 	@action async queryNoteList(node) {
-		await axiosWithToken
+		await new axiosWithToken(this.token)
 			.post(`${Backend}/noteList`, {
 				user: this.username,
 				node,
@@ -59,7 +61,7 @@ class AppState {
 	}
 
 	@action async queryMD(id) {
-		await axiosWithToken
+		await new axiosWithToken(this.token)
 			.post(`${Backend}/notepage`, {
 				user: this.username,
 				_id: id,

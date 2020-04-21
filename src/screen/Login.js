@@ -5,6 +5,7 @@ import axios from "axios";
 import { FormGroup, InputGroup, Button } from "@blueprintjs/core";
 
 import { Backend } from "../func&var/Variables";
+import cusLocalStorage from "../store/cusLocalStorage";
 
 @withRouter
 @inject("store")
@@ -18,15 +19,15 @@ export default class Login extends Component {
 		confirmPassword: "",
 		isNameUsed: false,
 		isNameRight: true,
+		isPasswordRight: true,
+		isPasswordConfirmed: true,
 	};
 
-	username() {
+	async username() {
 		//用户名输入框 onBlur 事件，验证用户名是否被占用
 		if (this.state.username.match(/^([a-zA-Z0-9_\u4e00-\u9fa5]{2,9})$/)) {
-			this.setState({
-				isNameRight: true,
-			});
-			axios
+			await this.setState({ isNameRight: true });
+			await axios
 				.post(`${Backend}/register/isNameUsed`, {
 					username: this.state.username,
 				})
@@ -47,38 +48,36 @@ export default class Login extends Component {
 					});
 				});
 		} else {
-			this.setState({
+			await this.setState({
 				isNameRight: false,
 			});
 		}
 	}
 
-	password() {
-		//TODO 明天修改密码失焦验证和确认密码验证，写后端注册登录逻辑
-		if (this.password.match(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[^]{8,16}$/)) {
-			this.iconKey = { fill: "#4bc081" };
-			this.ispassRight = true;
-			if (this.password === this.confirm) {
-				this.iconConfirm = { fill: "#4bc081" };
-				this.isConfirmed = true;
-			} else {
-				this.iconConfirm = { fill: "#dc3030" };
-				this.isConfirmed = false;
-			}
+	async password(e) {
+		await this.setState({ password: e.target.value });
+		if (
+			this.state.password.match(
+				/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[^]{8,16}$/
+			)
+		) {
+			await this.setState({ isPasswordRight: true });
+			await this.setState({
+				isPasswordConfirmed:
+					this.state.password === this.state.confirmPassword
+						? true
+						: false,
+			});
 		} else {
-			this.iconKey = { fill: "#dc3030" };
-			this.ispassRight = false;
+			await this.setState({ isPasswordRight: false });
 		}
 	}
 
-	confirm() {
-		if (this.password === this.confirm) {
-			this.iconConfirm = { fill: "#4bc081" };
-			this.isConfirmed = true;
-		} else {
-			this.iconConfirm = { fill: "#dc3030" };
-			this.isConfirmed = false;
-		}
+	async confirm(e) {
+		await this.setState({ confirmPassword: e.target.value });
+		this.state.password === this.state.confirmPassword
+			? await this.setState({ isPasswordConfirmed: true })
+			: await this.setState({ isPasswordConfirmed: false });
 	}
 
 	login(path) {
@@ -92,7 +91,32 @@ export default class Login extends Component {
 					if (res.data.isError) {
 						throw res.data.error;
 					}
-					console.log(res.data);
+					this.props.store.token = res.data.token;
+					this.props.store.username = this.state.username;
+					cusLocalStorage.set({
+						username: this.state.username,
+						token: res.data.token,
+					});
+					this.props.history.push("/");
+				})
+				.catch((err) => {
+					console.error(err);
+					if (err === "用户名不存在" || err === "密码错误") {
+						alert(err);
+					}
+				});
+		} else {
+			axios
+				.post(`${Backend}/register`, {
+					username: this.state.username,
+					password: this.state.password,
+				})
+				.then((res) => {
+					if (res.data.isError) {
+						throw res.data.error;
+					}
+					alert("注册成功，即将跳转登录页面");
+					this.props.history.push("/login");
 				})
 				.catch((err) => {
 					console.error(err);
@@ -135,14 +159,17 @@ export default class Login extends Component {
 						helperText="8-16位密码，须包含 1 大写字母、1 小写字母、1 数字"
 						label="密码："
 						labelFor="password-input"
+						labelInfo={
+							this.state.isPasswordRight
+								? ""
+								: "请输入正确格式的密码"
+						}
 					>
 						<InputGroup
 							type={this.state.showPassword ? "text" : "password"}
 							placeholder="请输入密码"
 							value={this.state.password}
-							onChange={(e) =>
-								this.setState({ password: e.target.value })
-							}
+							onChange={(e) => this.password(e)}
 							leftIcon="key"
 							rightElement={
 								<Button
@@ -170,6 +197,11 @@ export default class Login extends Component {
 						}
 						label="确认密码："
 						labelFor="password-input"
+						labelInfo={
+							this.state.isPasswordConfirmed
+								? ""
+								: "请确保两次密码相同"
+						}
 					>
 						<InputGroup
 							type={
@@ -179,11 +211,7 @@ export default class Login extends Component {
 							}
 							placeholder="请再次输入密码"
 							value={this.state.confirmPassword}
-							onChange={(e) =>
-								this.setState({
-									confirmPassword: e.target.value,
-								})
-							}
+							onChange={(e) => this.confirm(e)}
 							leftIcon="key"
 							rightElement={
 								<Button
@@ -212,7 +240,27 @@ export default class Login extends Component {
 								: "确认注册"
 						}
 						style={{ margin: "20px 0" }}
-						onClick={() => this.login(this.props.match.path)}
+						onClick={() => {
+							if (
+								!this.state.username.match(
+									/^([a-zA-Z0-9_\u4e00-\u9fa5]{2,9})$/
+								)
+							) {
+								this.setState({
+									isNameRight: false,
+								});
+							} else if (
+								!this.state.password.match(
+									/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[^]{8,16}$/
+								)
+							) {
+								this.setState({
+									isPasswordRight: false,
+								});
+							} else {
+								this.login(this.props.match.path);
+							}
+						}}
 					/>
 
 					{this.props.match.path === "/login" ? (

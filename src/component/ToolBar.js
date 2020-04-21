@@ -1,8 +1,8 @@
 import React, { Component } from "react";
 import { Button, InputGroup } from "@blueprintjs/core";
 import { observer, inject } from "mobx-react";
-import axios from "axios";
 import { Backend } from "../func&var/Variables";
+import axiosWithToken from "../axiosWithToken";
 
 @inject("store")
 @observer
@@ -17,7 +17,7 @@ class ToolBar extends Component {
 
 		if (switchPath === "region") {
 			addObj.name = this.state.inputVal;
-			await axios
+			await new axiosWithToken(this.props.store.token)
 				.post(`${Backend}/nodeTree/addregion`, {
 					user: this.props.store.username,
 					region: addObj,
@@ -39,7 +39,7 @@ class ToolBar extends Component {
 				return false;
 			}
 			addObj.title = this.state.inputVal;
-			await axios
+			await new axiosWithToken(this.props.store.token)
 				.post(`${Backend}/notelist/addnote`, {
 					user: this.props.store.username,
 					note: addObj,
@@ -47,7 +47,7 @@ class ToolBar extends Component {
 				.then((res) => {
 					if (res.data.isError) {
 						throw res.data.error;
-                    }
+					}
 					this.props.store.changeNoteList(
 						JSON.parse(res.data.noteList)
 					);

@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import { observer, inject } from "mobx-react";
 import { withRouter } from "react-router-dom";
-import axios from "axios";
 import {
 	Icon,
 	Colors,
@@ -13,6 +12,7 @@ import {
 import { ContextMenuTarget } from "@blueprintjs/core/lib/esnext/components";
 
 import { Backend } from "../func&var/Variables";
+import axiosWithToken from "../axiosWithToken";
 
 @withRouter
 @inject("store")
@@ -36,7 +36,7 @@ class NoteListItem extends Component {
 	}
 
 	async saveRename() {
-		await axios
+		await new axiosWithToken(this.props.store.token)
 			.post(`${Backend}/notelist/saverename`, {
 				user: this.props.store.username, //用户名
 				cusid: this.props._id, // 列表选项id
@@ -68,7 +68,7 @@ class NoteListItem extends Component {
 
 	async deleteNote() {
 		if (!confirm("确定删除吗？")) return false;
-		await axios
+		await new axiosWithToken(this.props.store.token)
 			.post(`${Backend}/notelist/deletenote`, {
 				user: this.props.store.username, //用户名
 				cusid: this.props._id, //列表选项id

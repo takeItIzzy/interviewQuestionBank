@@ -1,13 +1,13 @@
 import React, { Component } from "react";
 import { observer, inject } from "mobx-react";
 import { withRouter } from "react-router-dom";
-import axios from "axios";
 import { Button } from "@blueprintjs/core";
 import ReactMde from "react-mde";
 import ReactMarkdown from "react-markdown";
 import "react-mde/lib/styles/css/react-mde-all.css";
 
 import { Backend } from "../func&var/Variables";
+import axiosWithToken from "../axiosWithToken";
 
 @withRouter
 @inject("store")
@@ -18,7 +18,7 @@ class NotePage extends Component {
 	};
 
 	async saveMD() {
-		await axios
+		await new axiosWithToken(this.props.store.token)
 			.post(`${Backend}/notepage/savemd`, {
 				user: this.props.store.username,
 				noteId: this.props.store.noteClickId,

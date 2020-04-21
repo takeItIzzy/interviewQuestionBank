@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import { observer, inject } from "mobx-react";
 import { withRouter } from "react-router-dom";
-import axios from "axios";
 import {
 	Icon,
 	Colors,
@@ -13,6 +12,7 @@ import {
 import { ContextMenuTarget } from "@blueprintjs/core/lib/esnext/components";
 
 import { Backend } from "../func&var/Variables";
+import axiosWithToken from "../axiosWithToken";
 
 @withRouter
 @inject("store")
@@ -57,7 +57,7 @@ class TreeNode extends Component {
 		let level = clickedNode.getAttribute("cuslevel") * 1 + 1; // 新建节点层级
 		let name =
 			this.state.newNodeName === "" ? "未命名" : this.state.newNodeName; //新建节点的名字
-		await axios
+		await new axiosWithToken(this.props.store.token)
 			.post(`${Backend}/treenode/createnode`, {
 				user: this.props.store.username,
 				parentId,
@@ -83,7 +83,7 @@ class TreeNode extends Component {
 		if (!confirm("确定删除吗？其下子节点也会一并删除")) return false;
 		// 发送当前点击节点 cusid 到后台，包括其下子节点一起删除
 		let id = clickedNode.getAttribute("cusid");
-		await axios
+		await new axiosWithToken(this.props.store.token)
 			.post(`${Backend}/treenode/deletenode`, {
 				user: this.props.store.username,
 				deleteId: id,
@@ -116,7 +116,7 @@ class TreeNode extends Component {
 
 	//保存重命名
 	async saveRename() {
-		await axios
+		await new axiosWithToken(this.props.store.token)
 			.post(`${Backend}/treenode/saverename`, {
 				user: this.props.store.username,
 				cusid: this.props.cusid,
