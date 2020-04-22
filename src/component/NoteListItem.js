@@ -30,7 +30,7 @@ class NoteListItem extends Component {
 
 		this.props.store.queryMD(this.props._id);
 		//移动端切换展示页面
-		this.props.store.viewType < 3 && (this.props.store.viewType += 1);
+		window.innerWidth < 800 && this.props.store.viewType < 3 && (this.props.store.viewType += 1);
 	}
 
 	renameNote() {

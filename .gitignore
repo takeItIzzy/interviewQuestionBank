@@ -10,6 +10,7 @@
 
 # production
 /build
+/iqbankm
 
 # misc
 .DS_Store

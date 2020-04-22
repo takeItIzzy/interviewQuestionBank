@@ -49,7 +49,7 @@ class TreeNode extends Component {
 			this.props.store.queryNoteList(this.props.cusid);
 
 			//移动端切换展示页面
-			this.props.store.viewType < 3 && (this.props.store.viewType += 1);
+			window.innerWidth < 800 && this.props.store.viewType < 3 && (this.props.store.viewType += 1);
 		}
 	}
 
