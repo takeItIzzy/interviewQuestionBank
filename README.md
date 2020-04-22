@@ -44,6 +44,10 @@ mobx 相关：src/store
 
 ![知识树右键菜单](https://i.loli.net/2020/04/22/stpzmqnX7NW9B4i.png)
 
+知识树在移动端看起来是这样：
+
+![知识树移动端样式](https://i.loli.net/2020/04/22/DGLUAO3QNJ6uZIp.png)
+
 ### 题目列表
 
 没有任何知识树末端节点被点击前，或者该被点击节点没有题目时，题目列表展示提醒，点击后展示当前知识点所收集的题目。
@@ -54,6 +58,10 @@ mobx 相关：src/store
 
 ![题目列表右键菜单](https://i.loli.net/2020/04/22/awcYL3uUeG9BsIm.png)
 
+题目列表在移动端看起来是这样：
+
+![题目列表移动端样式](https://i.loli.net/2020/04/22/yJVstnNKLpbfC61.png)
+
 ### 题目解析
 
 当没有题目被点击时，题目解析处展示提醒，点击具体题目，可以查看解析。
@@ -63,3 +71,7 @@ mobx 相关：src/store
 ![编辑器](https://i.loli.net/2020/04/22/QrLp2sv3aOk814K.png)
 
 同时编辑器还监听键盘左右键，可以切换前/后一道题目。
+
+题目解析在移动端看起来是这样：
+
+![题目解析移动端样式](https://i.loli.net/2020/04/22/vXwUcyaFgAGsbxo.png)
